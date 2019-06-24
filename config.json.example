@@ -1,3 +1,10 @@
 {
-  "TOKEN": "YourBotToken"
+  "Discord": {
+    "TOKEN": "YourBotToken"
+  },
+  "Database": {
+    "user": "DatabaseUser",
+    "password": "DatabasePassword",
+    "database": "Database"
+  }
 }
