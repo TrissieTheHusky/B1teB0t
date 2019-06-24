@@ -1,5 +1,6 @@
 package b1tec0de.b1teb0t.main;
 
+import b1tec0de.b1teb0t.events.CommandManager;
 import b1tec0de.b1teb0t.utils.ConfigManager;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
@@ -23,6 +24,7 @@ public class Main {
             jda = new JDABuilder(AccountType.BOT)
                     .setToken(cm.getAuthToken())
                     .setAutoReconnect(true)
+                    .addEventListener(new CommandManager())
                     .build();
         } catch (LoginException e) {
             e.printStackTrace();
