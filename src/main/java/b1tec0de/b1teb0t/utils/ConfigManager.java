@@ -2,8 +2,6 @@ package b1tec0de.b1teb0t.utils;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -31,10 +29,9 @@ public class ConfigManager {
             br = new BufferedReader(new FileReader("./config.json"));
             JsonObject config = gson.fromJson(br, JsonObject.class);
             String TOKEN = config.getAsJsonObject("Discord").get("TOKEN").getAsString();
-            if(TOKEN.equals("YourBotToken")) {
+            if (TOKEN.equals("YourBotToken")) {
                 return "default values";
-            }
-            else {
+            } else {
                 return TOKEN;
             }
         } catch (FileNotFoundException e) {
@@ -42,13 +39,19 @@ public class ConfigManager {
         }
     }
 
-    public HashMap getDatabaseCreds() {
-        JsonObject config = gson.fromJson(br, JsonObject.class);
-        HashMap<String, String> creds = new HashMap<>();
-        creds.put("user", config.getAsJsonObject("Database").get("user").getAsString());
-        creds.put("password", config.getAsJsonObject("Database").get("password").getAsString());
-        creds.put("database", config.getAsJsonObject("Database").get("database").getAsString());
-        return creds;
+    HashMap getDatabaseCreds() {
+        try {
+            br = new BufferedReader(new FileReader("./config.json"));
+            JsonObject config = gson.fromJson(br, JsonObject.class);
+            HashMap<String, String> creds = new HashMap<>();
+            creds.put("user", config.getAsJsonObject("Database").get("user").getAsString());
+            creds.put("password", config.getAsJsonObject("Database").get("password").getAsString());
+            creds.put("host", config.getAsJsonObject("Database").get("host").getAsString());
+            creds.put("database", config.getAsJsonObject("Database").get("database").getAsString());
+            return creds;
+        } catch (FileNotFoundException e) {
+            return null;
+        }
     }
 
 }

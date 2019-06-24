@@ -5,6 +5,7 @@
   "Database": {
     "user": "DatabaseUser",
     "password": "DatabasePassword",
+    "host": "DatabaseHost(eg. localhost)",
     "database": "Database"
   }
 }
