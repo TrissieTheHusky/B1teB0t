@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public class Main {
 
     public static ArrayList<GuildConfig> guildConfigs = new ArrayList<>();
-
+  
     private static JDA jda;
     private static Logger logger = LoggerFactory.getLogger(ConfigManager.class);
 
@@ -47,6 +47,7 @@ public class Main {
                         .addEventListener(new BotStarted())
                         .addEventListener(new CommandManager())
                         .addEventListener(new GuildJoin())
+                        .addEventListener(new CommandManager())
                         .build();
             }
         } catch (LoginException e) {

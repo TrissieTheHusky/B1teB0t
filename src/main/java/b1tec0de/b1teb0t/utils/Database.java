@@ -54,7 +54,7 @@ public class Database {
             e.printStackTrace();
         }
     }
-
+  
     public void insertGuild(String guildId) {
         try {
             // Connect to Database
@@ -70,7 +70,7 @@ public class Database {
             e.printStackTrace();
         }
     }
-
+  
     public void updatePrefix(String guildId, String prefix) {
         try {
             // Connect to Database

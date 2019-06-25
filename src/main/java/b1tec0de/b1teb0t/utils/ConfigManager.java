@@ -38,7 +38,7 @@ public class ConfigManager {
             return "not found";
         }
     }
-
+  
     HashMap<String, String> getDatabaseCreds() {
         try {
             br = new BufferedReader(new FileReader("./config.json"));
