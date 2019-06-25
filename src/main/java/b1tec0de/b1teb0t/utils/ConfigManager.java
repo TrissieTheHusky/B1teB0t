@@ -38,8 +38,8 @@ public class ConfigManager {
             return "not found";
         }
     }
-
-    HashMap getDatabaseCreds() {
+  
+    HashMap<String, String> getDatabaseCreds() {
         try {
             br = new BufferedReader(new FileReader("./config.json"));
             JsonObject config = gson.fromJson(br, JsonObject.class);
