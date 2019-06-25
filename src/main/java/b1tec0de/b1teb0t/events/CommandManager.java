@@ -12,7 +12,7 @@ public class CommandManager extends ListenerAdapter {
         if (e.getMessage().getContentRaw().startsWith(prefix)) {
             if (e.getMessage().getContentRaw().startsWith(prefix + "clear")) {
                 ClearSystem cs = new ClearSystem();
-                cs.clearCommand(new String[] {e.getMessage().getContentRaw().replace(prefix + "clear ", "")}, e.getChannel());
+                cs.clearCommand(new String[]{e.getMessage().getContentRaw().replace(prefix + "clear ", "")}, e.getChannel());
             }
         }
     }

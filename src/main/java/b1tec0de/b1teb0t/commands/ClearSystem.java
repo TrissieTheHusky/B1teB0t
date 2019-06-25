@@ -14,9 +14,13 @@ public class ClearSystem {
 
     public void clearCommand(String[] args, TextChannel channel) {
 
-        if(args.length == 1){
+        int amount  = Integer.parseInt(args[0]);
+
+        if(args.length < 1){
+            channel.sendMessage("Usage: `"+prefix+"clear <amount>`");
+        }else if (args.length == 1 && amount > 1 && amount <= 100) {
             try {
-                delMessages(Integer.parseInt(args[0]), channel);
+                delMessages(amount + 1, channel);
                 Message success = channel.sendMessage("You deleted **" + args[0] + "** messages.").complete();
                 new Timer().schedule(new TimerTask() {
                     @Override
@@ -30,7 +34,14 @@ public class ClearSystem {
                 ex.printStackTrace();
             }
         }else{
-            channel.sendMessage("Usage: `"+prefix+"clear <amount>`");
+            Message error = channel.sendMessage("Please enter a number between 2 and 100.").complete();
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    error.delete().queue();
+                }
+            }, 3000);
+            return;
         }
     }
 
@@ -42,4 +53,5 @@ public class ClearSystem {
         channel.deleteMessages(msgs).queue();
     }
 }
+
 
