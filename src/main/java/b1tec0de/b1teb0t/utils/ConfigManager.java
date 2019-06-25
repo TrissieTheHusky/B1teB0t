@@ -1,10 +1,12 @@
 package b1tec0de.b1teb0t.utils;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.HashMap;
 
 /**
  * Reads the Bot Auth Token from config.json and returns it.
@@ -15,29 +17,39 @@ import java.io.FileReader;
 public class ConfigManager {
 
     private Gson gson;
+    private BufferedReader br;
+
 
     public ConfigManager() {
         gson = new Gson();
     }
 
-    public static class Config {
-
-        String TOKEN;
-
-        String getToken() {
-            return TOKEN;
-        }
-
-    }
-
     public String getAuthToken() {
         try {
-            BufferedReader br = new BufferedReader(new FileReader("./config.json"));
-            Config config = gson.fromJson(br, Config.class);
-            return config.getToken();
-
+            br = new BufferedReader(new FileReader("./config.json"));
+            JsonObject config = gson.fromJson(br, JsonObject.class);
+            String TOKEN = config.getAsJsonObject("Discord").get("TOKEN").getAsString();
+            if (TOKEN.equals("YourBotToken")) {
+                return "default values";
+            } else {
+                return TOKEN;
+            }
         } catch (FileNotFoundException e) {
-            System.out.println("[ERROR] config.json not found!");
+            return "not found";
+        }
+    }
+
+    HashMap getDatabaseCreds() {
+        try {
+            br = new BufferedReader(new FileReader("./config.json"));
+            JsonObject config = gson.fromJson(br, JsonObject.class);
+            HashMap<String, String> creds = new HashMap<>();
+            creds.put("user", config.getAsJsonObject("Database").get("user").getAsString());
+            creds.put("password", config.getAsJsonObject("Database").get("password").getAsString());
+            creds.put("host", config.getAsJsonObject("Database").get("host").getAsString());
+            creds.put("database", config.getAsJsonObject("Database").get("database").getAsString());
+            return creds;
+        } catch (FileNotFoundException e) {
             return null;
         }
     }
