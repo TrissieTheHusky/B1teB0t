@@ -10,6 +10,9 @@ public class GuildConfig {
 
     private String guildId;
     private String prefix;
+    private boolean warnSystem;
+    private int warnSystemMaxWarns;
+    private int warnSystemTimeoutLength;
 
     public String getGuildId() {
         return guildId;
@@ -27,4 +30,27 @@ public class GuildConfig {
         this.prefix = prefix;
     }
 
+    public boolean isWarnSystem() {
+        return warnSystem;
+    }
+
+    public void setWarnSystem(boolean warn_system) {
+        this.warnSystem = warn_system;
+    }
+
+    public int getWarnSystemMaxWarns() {
+        return warnSystemMaxWarns;
+    }
+
+    public void setWarnSystemMaxWarns(int warnSystemMaxWarns) {
+        this.warnSystemMaxWarns = warnSystemMaxWarns;
+    }
+
+    public int getWarnSystemTimeoutLength() {
+        return warnSystemTimeoutLength;
+    }
+
+    public void setWarnSystemTimeoutLength(int warnSystemTimeoutLength) {
+        this.warnSystemTimeoutLength = warnSystemTimeoutLength;
+    }
 }

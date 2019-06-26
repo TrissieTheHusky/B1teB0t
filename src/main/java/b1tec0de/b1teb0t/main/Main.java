@@ -3,6 +3,7 @@ package b1tec0de.b1teb0t.main;
 import b1tec0de.b1teb0t.events.BotStarted;
 import b1tec0de.b1teb0t.events.CommandManager;
 import b1tec0de.b1teb0t.events.GuildJoin;
+import b1tec0de.b1teb0t.events.Unban;
 import b1tec0de.b1teb0t.utils.ConfigManager;
 import b1tec0de.b1teb0t.utils.objects.GuildConfig;
 import net.dv8tion.jda.core.AccountType;
@@ -47,7 +48,7 @@ public class Main {
                         .addEventListener(new BotStarted())
                         .addEventListener(new CommandManager())
                         .addEventListener(new GuildJoin())
-                        .addEventListener(new CommandManager())
+                        .addEventListener(new Unban())
                         .build();
             }
         } catch (LoginException e) {

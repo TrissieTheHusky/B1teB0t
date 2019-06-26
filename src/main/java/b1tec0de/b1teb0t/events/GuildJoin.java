@@ -25,5 +25,4 @@ public class GuildJoin extends ListenerAdapter {
         guildConfig.setPrefix("!");
         Main.guildConfigs.add(guildConfig);
     }
-
 }
