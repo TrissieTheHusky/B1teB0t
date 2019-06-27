@@ -1,5 +1,7 @@
 package b1tec0de.b1teb0t.utils.objects;
 
+import java.util.ArrayList;
+
 /**
  * GuildConfig Object.
  *
@@ -13,6 +15,10 @@ public class GuildConfig {
     private boolean warnSystem;
     private int warnSystemMaxWarns;
     private int warnSystemTimeoutLength;
+    private ArrayList<String> supportChannel;
+    private String supportChannelWaitingRoom;
+    private String supportNews;
+    private String supportRole;
 
     public String getGuildId() {
         return guildId;
@@ -52,5 +58,37 @@ public class GuildConfig {
 
     public void setWarnSystemTimeoutLength(int warnSystemTimeoutLength) {
         this.warnSystemTimeoutLength = warnSystemTimeoutLength;
+    }
+
+    public ArrayList<String> getSupportChannel() {
+        return supportChannel;
+    }
+
+    public void setSupportChannel(ArrayList<String> supportChannel) {
+        this.supportChannel = supportChannel;
+    }
+
+    public String getSupportChannelWaitingRoom() {
+        return supportChannelWaitingRoom;
+    }
+
+    public void setSupportChannelWaitingRoom(String supportChannelWaitingRoom) {
+        this.supportChannelWaitingRoom = supportChannelWaitingRoom;
+    }
+
+    public String getSupportNews() {
+        return supportNews;
+    }
+
+    public void setSupportNews(String supportNews) {
+        this.supportNews = supportNews;
+    }
+
+    public String getSupportRole() {
+        return supportRole;
+    }
+
+    public void setSupportRole(String supportRole) {
+        this.supportRole = supportRole;
     }
 }

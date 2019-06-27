@@ -6,6 +6,10 @@ import b1tec0de.b1teb0t.utils.objects.GuildConfig;
 import net.dv8tion.jda.core.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
+import java.awt.*;
+import java.util.Timer;
+import java.util.TimerTask;
+
 /**
  * Triggered when the Bot joins to a new Guild.
  *
@@ -23,6 +27,21 @@ public class GuildJoin extends ListenerAdapter {
         GuildConfig guildConfig = new GuildConfig();
         guildConfig.setGuildId(e.getGuild().getId());
         guildConfig.setPrefix("!");
-        Main.guildConfigs.add(guildConfig);
+
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                //Add Supporter Role
+                e.getGuild().getController().createRole()
+                        .setName("Supporter")
+                        .setColor(Color.CYAN)
+                        .setMentionable(true)
+                        .queue(role -> {
+                            guildConfig.setSupportRole(role.getId());
+                            db.setSupportRole(e.getGuild().getId(), role.getId());
+                            Main.guildConfigs.add(guildConfig);
+                        });
+            }
+        }, 5000);
     }
 }
