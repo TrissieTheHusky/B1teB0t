@@ -45,6 +45,7 @@ public class Main {
                         .addEventListener(new BotStarted())
                         .addEventListener(new CommandManager())
                         .addEventListener(new GuildJoin())
+                        .addEventListener(new ActionLogEvent())
                         .addEventListener(new Unban())
                         .addEventListener(new SupportSystem())
                         .build();
