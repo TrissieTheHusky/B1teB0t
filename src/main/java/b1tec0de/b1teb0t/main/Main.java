@@ -47,6 +47,7 @@ public class Main {
                         .addEventListener(new GuildJoin())
                         .addEventListener(new ActionLogEvent())
                         .addEventListener(new Unban())
+                        .addEventListener(new SupportSystem())
                         .build();
             }
         } catch (LoginException e) {

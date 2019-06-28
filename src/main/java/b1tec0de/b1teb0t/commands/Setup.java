@@ -3,10 +3,13 @@ package b1tec0de.b1teb0t.commands;
 import b1tec0de.b1teb0t.utils.Database;
 import b1tec0de.b1teb0t.utils.GuildConfigManager;
 import b1tec0de.b1teb0t.utils.objects.GuildConfig;
+import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.entities.User;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -21,7 +24,12 @@ import java.util.TimerTask;
 
 public class Setup {
 
+    public static HashMap<Guild, User> tmpSupportWaitSetup = new HashMap<>();
+    public static HashMap<Guild, User> tmpSupportSupSetup = new HashMap<>();
+    public static HashMap<User, TextChannel> tmpSupportUser = new HashMap<>();
+
     public void setupCommand(ArrayList<String> args, TextChannel channel, Message msg) {
+        // Prefix
         if (args.get(0).equalsIgnoreCase("prefix") && args.size() == 2) {
             GuildConfigManager gcm = new GuildConfigManager();
             GuildConfig guildConfig = gcm.getGuildConfigById(channel.getGuild().getId());
@@ -37,6 +45,46 @@ public class Setup {
                 sendMessage(channel, msg, "You successfully set the prefix to: ``" + args.get(1) + "``");
             }
         }
+        // SupportSystem
+        if (args.get(0).equalsIgnoreCase("supportSystem") || args.get(0).equalsIgnoreCase("support-system") || args.get(0).equalsIgnoreCase("support_system")) {
+            if (args.get(1).equalsIgnoreCase("add")) {
+                if (args.get(2).equalsIgnoreCase("support")) {
+                    channel.sendMessage(msg.getAuthor().getAsMention() + " Please join now into the Support-Room").queue();
+                    tmpSupportSupSetup.put(msg.getGuild(), msg.getAuthor());
+                    tmpSupportUser.put(msg.getAuthor(), msg.getTextChannel());
+                    new Timer().schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            tmpSupportUser.remove(msg.getAuthor());
+                            tmpSupportSupSetup.remove(msg.getGuild());
+                        }
+                    }, 2 * 60 * 1000);
+                }
+            } else if (args.get(1).equalsIgnoreCase("set")) {
+                if (args.get(2).equalsIgnoreCase("wait")) {
+                    channel.sendMessage(msg.getAuthor().getAsMention() + " Please join now into the Support-Waiting-Room").queue();
+                    tmpSupportWaitSetup.put(msg.getGuild(), msg.getAuthor());
+                    tmpSupportUser.put(msg.getAuthor(), msg.getTextChannel());
+                    new Timer().schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            tmpSupportUser.remove(msg.getAuthor());
+                            tmpSupportWaitSetup.remove(msg.getGuild());
+                        }
+                    }, 2 * 60 * 1000);
+                } else if (args.get(2).equalsIgnoreCase("log")) {
+                    // Database
+                    Database db = new Database();
+                    db.setSupportNews(msg.getGuild().getId(), msg.getMentionedChannels().get(0).getId());
+                    // GuildConfig
+                    GuildConfigManager gcm = new GuildConfigManager();
+                    GuildConfig guildConfig = gcm.getGuildConfigById(msg.getGuild().getId());
+                    guildConfig.setSupportNews(msg.getMentionedChannels().get(0).getId());
+                    sendMessage(channel, msg, "You successfully set the Support-System Log Channel to " + msg.getMentionedChannels().get(0).getAsMention());
+                }
+            }
+        }
+        // WarnSystem
         if (args.get(0).equalsIgnoreCase("warn-system") || args.get(0).equalsIgnoreCase("warn_system") || args.get(0).equalsIgnoreCase("warnSystem")) {
             GuildConfigManager gcm = new GuildConfigManager();
             GuildConfig guildConfig = gcm.getGuildConfigById(channel.getGuild().getId());

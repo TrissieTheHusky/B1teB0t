@@ -6,6 +6,7 @@ import com.mysql.cj.jdbc.MysqlDataSource;
 import net.dv8tion.jda.core.entities.TextChannel;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -53,9 +54,51 @@ public class Database {
                 }
                 guildConfig.setWarnSystemMaxWarns(rs.getInt(4));
                 guildConfig.setWarnSystemTimeoutLength(rs.getInt(5));
+                guildConfig.setSupportRole(rs.getString(6));
+                guildConfig.setSupportChannelWaitingRoom(rs.getString(7));
+                guildConfig.setSupportNews(rs.getString(8));
                 Main.guildConfigs.add(guildConfig);
             }
             rs.close();
+            stmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        for (GuildConfig guildConfig : Main.guildConfigs) {
+            guildConfig.setSupportChannel(getGuildSupportChannel(guildConfig.getGuildId()));
+        }
+    }
+
+    private ArrayList<String> getGuildSupportChannel(String guildId) {
+        try {
+            Connection conn = mysqlDataSource.getConnection();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT support_channel_id AS id FROM support_system WHERE guildId='" + guildId + "';");
+            ArrayList<String> channels = new ArrayList<>();
+            while (rs.next()) {
+                channels.add(rs.getString(1));
+            }
+            rs.close();
+            stmt.close();
+            conn.close();
+            return channels;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public void setSupportRole(String guildId, String roleId) {
+        try {
+            // Connect to Database
+            Connection conn = mysqlDataSource.getConnection();
+            // Set Query
+            PreparedStatement stmt = conn.prepareStatement("UPDATE guild_config SET support_system_role=? WHERE guildId=?;");
+            stmt.setString(1, roleId);
+            stmt.setString(2, guildId);
+            // Execute Query and Close Connection
+            stmt.executeUpdate();
             stmt.close();
             conn.close();
         } catch (SQLException e) {
@@ -74,8 +117,7 @@ public class Database {
             stmt.executeUpdate();
             stmt.close();
             conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException ignored) {
         }
     }
   
@@ -86,6 +128,23 @@ public class Database {
             // Set Query
             PreparedStatement stmt = conn.prepareStatement("UPDATE guild_config SET prefix=? WHERE guildId=?;");
             stmt.setString(1, prefix);
+            stmt.setString(2, guildId);
+            // Execute Query and Close Connection
+            stmt.executeUpdate();
+            stmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setSupportNews(String guildId, String channel) {
+        try {
+            // Connect to Database
+            Connection conn = mysqlDataSource.getConnection();
+            // Set Query
+            PreparedStatement stmt = conn.prepareStatement("UPDATE guild_config SET support_system_news=? WHERE guildId=?;");
+            stmt.setString(1, channel);
             stmt.setString(2, guildId);
             // Execute Query and Close Connection
             stmt.executeUpdate();
@@ -225,6 +284,38 @@ public class Database {
             Statement stmt = conn.createStatement();
             // Execute Query and Close Connection
             stmt.executeUpdate("DELETE FROM warn_system_reasons WHERE guildId='" + guildId + "' AND id='" + reasonId + "';");
+            stmt.close();
+            conn.close();
+        } catch (SQLException ignored) {
+        }
+    }
+
+    public void setSupportWaitChannel(String guildId, String channel) {
+        try {
+            // Connect to Database
+            Connection conn = mysqlDataSource.getConnection();
+            // Set Query
+            PreparedStatement stmt = conn.prepareStatement("UPDATE guild_config SET support_system_waiting_room=? WHERE guildId=?;");
+            stmt.setString(1, channel);
+            stmt.setString(2, guildId);
+            // Execute Query and Close Connection
+            stmt.executeUpdate();
+            stmt.close();
+            conn.close();
+        } catch (SQLException ignored) {
+        }
+    }
+
+    public void addSupportSupChannel(String guildId, String channel) {
+        try {
+            // Connect to Database
+            Connection conn = mysqlDataSource.getConnection();
+            // Set Query
+            PreparedStatement stmt = conn.prepareStatement("INSERT INTO support_system (guildId, support_channel_id) VALUES (?, ?);");
+            stmt.setString(1, guildId);
+            stmt.setString(2, channel);
+            // Execute Query and Close Connection
+            stmt.executeUpdate();
             stmt.close();
             conn.close();
         } catch (SQLException ignored) {
