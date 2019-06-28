@@ -91,49 +91,51 @@ public class SupportSystem extends ListenerAdapter {
         } else {
             GuildConfigManager gcm = new GuildConfigManager();
             GuildConfig guildConfig = gcm.getGuildConfigById(event.getGuild().getId());
-            /*
-             * When user moves from any channel to Support Waiting Room
-             * then execute the function support()
-             */
-            if (event.getChannelJoined().getId().equalsIgnoreCase(guildConfig.getSupportChannelWaitingRoom())) {
-                support(event.getMember(), event.getGuild().getTextChannelById(guildConfig.getSupportNews()), event.getGuild().getRoleById(guildConfig.getSupportRole()));
-            }
-            /*
-             * When user moves from Support Waiting Room to another channel which isn't one of the specified Support Channel
-             * then add x reaction to message
-             * and remove the Member from inSupport Hashmap
-             */
-            else if (!guildConfig.getSupportChannel().contains(event.getChannelJoined().getId()) && guildConfig.getSupportChannelWaitingRoom().equalsIgnoreCase(event.getChannelLeft().getId())) {
-                //Add x to msg
-                String msgId = inSupport.get(event.getMember());
-                new Timer().schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        event.getGuild().getTextChannelById(guildConfig.getSupportNews()).addReactionById(msgId, "\u274C").queue();
-                        inSupport.remove(event.getMember());
-                    }
-                }, 3000);
-            }
-            /*
-             * When user moves from Support Waiting Room to one of the specified Support Channel
-             * then add check mark reaction
-             * and remove the Member from inSupport Hashmap
-             */
-            else if (guildConfig.getSupportChannel().contains(event.getChannelJoined().getId()) && guildConfig.getSupportChannelWaitingRoom().equalsIgnoreCase(event.getChannelLeft().getId())) {
-                //Add CheckMark to msg
-                String msgId = inSupport.get(event.getMember());
-                new Timer().schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        event.getGuild().getTextChannelById(guildConfig.getSupportNews()).addReactionById(msgId, "\u2705").queue();
-                        inSupport.remove(event.getMember());
-                    }
-                }, 3000);
+            if (guildConfig.getSupportChannel() != null && guildConfig.getSupportChannelWaitingRoom() != null) {
                 /*
-                 * When user left one of the specified Support Channel remove the Member from inSupport Hashmap
+                 * When user moves from any channel to Support Waiting Room
+                 * then execute the function support()
                  */
-            } else if (guildConfig.getSupportChannel().contains(event.getChannelLeft().getId())) {
-                inSupport.remove(event.getMember());
+                if (event.getChannelJoined().getId().equalsIgnoreCase(guildConfig.getSupportChannelWaitingRoom())) {
+                    support(event.getMember(), event.getGuild().getTextChannelById(guildConfig.getSupportNews()), event.getGuild().getRoleById(guildConfig.getSupportRole()));
+                }
+                /*
+                 * When user moves from Support Waiting Room to another channel which isn't one of the specified Support Channel
+                 * then add x reaction to message
+                 * and remove the Member from inSupport Hashmap
+                 */
+                else if (!guildConfig.getSupportChannel().contains(event.getChannelJoined().getId()) && guildConfig.getSupportChannelWaitingRoom().equalsIgnoreCase(event.getChannelLeft().getId())) {
+                    //Add x to msg
+                    String msgId = inSupport.get(event.getMember());
+                    new Timer().schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            event.getGuild().getTextChannelById(guildConfig.getSupportNews()).addReactionById(msgId, "\u274C").queue();
+                            inSupport.remove(event.getMember());
+                        }
+                    }, 3000);
+                }
+                /*
+                 * When user moves from Support Waiting Room to one of the specified Support Channel
+                 * then add check mark reaction
+                 * and remove the Member from inSupport Hashmap
+                 */
+                else if (guildConfig.getSupportChannel().contains(event.getChannelJoined().getId()) && guildConfig.getSupportChannelWaitingRoom().equalsIgnoreCase(event.getChannelLeft().getId())) {
+                    //Add CheckMark to msg
+                    String msgId = inSupport.get(event.getMember());
+                    new Timer().schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            event.getGuild().getTextChannelById(guildConfig.getSupportNews()).addReactionById(msgId, "\u2705").queue();
+                            inSupport.remove(event.getMember());
+                        }
+                    }, 3000);
+                    /*
+                     * When user left one of the specified Support Channel remove the Member from inSupport Hashmap
+                     */
+                } else if (guildConfig.getSupportChannel().contains(event.getChannelLeft().getId())) {
+                    inSupport.remove(event.getMember());
+                }
             }
         }
     }
@@ -143,17 +145,19 @@ public class SupportSystem extends ListenerAdapter {
     public void onGuildVoiceLeave(GuildVoiceLeaveEvent event) {
         GuildConfigManager gcm = new GuildConfigManager();
         GuildConfig guildConfig = gcm.getGuildConfigById(event.getGuild().getId());
-        if (guildConfig.getSupportChannel().contains(event.getChannelLeft().getId())) {
-            inSupport.remove(event.getMember());
-        } else if (guildConfig.getSupportChannelWaitingRoom().equalsIgnoreCase(event.getChannelLeft().getId())) {
-            String msgId = inSupport.get(event.getMember());
-            new Timer().schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    event.getGuild().getTextChannelById(guildConfig.getSupportNews()).addReactionById(msgId, "\u274C").queue();
-                    inSupport.remove(event.getMember());
-                }
-            }, 3000);
+        if (guildConfig.getSupportChannel() != null && guildConfig.getSupportChannelWaitingRoom() != null) {
+            if (guildConfig.getSupportChannel().contains(event.getChannelLeft().getId())) {
+                inSupport.remove(event.getMember());
+            } else if (guildConfig.getSupportChannelWaitingRoom().equalsIgnoreCase(event.getChannelLeft().getId())) {
+                String msgId = inSupport.get(event.getMember());
+                new Timer().schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        event.getGuild().getTextChannelById(guildConfig.getSupportNews()).addReactionById(msgId, "\u274C").queue();
+                        inSupport.remove(event.getMember());
+                    }
+                }, 3000);
+            }
         }
     }
 
