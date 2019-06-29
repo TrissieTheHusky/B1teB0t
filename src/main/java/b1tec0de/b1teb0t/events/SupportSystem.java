@@ -23,6 +23,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.function.Consumer;
 
+/**
+ * SupportSystem
+ *
+ * @author Kaufisch
+ */
+
 public class SupportSystem extends ListenerAdapter {
 
     private static HashMap<Member, String> inSupport = new HashMap<>();

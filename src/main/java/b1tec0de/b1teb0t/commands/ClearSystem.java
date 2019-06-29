@@ -9,6 +9,12 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * ClearSystem
+ *
+ * @author JavaBasti
+ */
+
 public class ClearSystem {
 
     public void clearCommand(ArrayList<String> args, TextChannel channel, String prefix) {

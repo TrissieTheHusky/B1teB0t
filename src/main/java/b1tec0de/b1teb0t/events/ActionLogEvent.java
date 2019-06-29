@@ -20,10 +20,18 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import java.awt.*;
 import java.time.Instant;
 
+/**
+ * Setup Command
+ * Adjust different things in the Modules of the bot.
+ *
+ * @author JavaBasti, Kaufisch
+ */
+
+
 public class ActionLogEvent extends ListenerAdapter {
 
     @Override
-    public void onGuildVoiceJoin(GuildVoiceJoinEvent e){
+    public void onGuildVoiceJoin(GuildVoiceJoinEvent e) {
         Member mb = e.getMember();
         VoiceChannel vc = e.getChannelJoined();
         Guild guild = mb.getGuild();
@@ -32,13 +40,14 @@ public class ActionLogEvent extends ListenerAdapter {
         EmbedBuilder embedBuilder = new EmbedBuilder()
                 .setAuthor(mb.getEffectiveName() + "#" + mb.getUser().getDiscriminator(), null, mb.getUser().getAvatarUrl())
                 .setColor(Color.GREEN)
-                .setDescription("<@" + mb.getUser().getId() + ">" + " **joined voicechannel `"+vc.getName()+"` **")
+                .setDescription("<@" + mb.getUser().getId() + ">" + " **joined voicechannel `" + vc.getName() + "` **")
                 .setTimestamp(Instant.now());
 
         tc.sendMessage(embedBuilder.build()).queue();
     }
+
     @Override
-    public void onGuildVoiceLeave(GuildVoiceLeaveEvent e){
+    public void onGuildVoiceLeave(GuildVoiceLeaveEvent e) {
         Member mb = e.getMember();
         VoiceChannel vc = e.getChannelLeft();
         Guild guild = mb.getGuild();
@@ -47,14 +56,14 @@ public class ActionLogEvent extends ListenerAdapter {
         EmbedBuilder embedBuilder = new EmbedBuilder()
                 .setAuthor(mb.getEffectiveName() + "#" + mb.getUser().getDiscriminator(), null, mb.getUser().getAvatarUrl())
                 .setColor(Color.RED)
-                .setDescription("<@" + mb.getUser().getId() + ">" + " **left voicechannel `"+vc.getName()+"` **")
+                .setDescription("<@" + mb.getUser().getId() + ">" + " **left voicechannel `" + vc.getName() + "` **")
                 .setTimestamp(Instant.now());
 
         tc.sendMessage(embedBuilder.build()).queue();
     }
 
     @Override
-    public void onGuildVoiceMove(GuildVoiceMoveEvent e){
+    public void onGuildVoiceMove(GuildVoiceMoveEvent e) {
         Member mb = e.getMember();
         VoiceChannel vc = e.getChannelLeft();
         VoiceChannel vc2 = e.getChannelJoined();
@@ -64,14 +73,14 @@ public class ActionLogEvent extends ListenerAdapter {
         EmbedBuilder embedBuilder = new EmbedBuilder()
                 .setAuthor(mb.getEffectiveName() + "#" + mb.getUser().getDiscriminator(), null, mb.getUser().getAvatarUrl())
                 .setColor(Color.GREEN)
-                .setDescription("<@" + mb.getUser().getId() + ">" + " **switched from voicechannel `"+vc.getName()+"` to `"+vc2.getName()+"`**")
+                .setDescription("<@" + mb.getUser().getId() + ">" + " **switched from voicechannel `" + vc.getName() + "` to `" + vc2.getName() + "`**")
                 .setTimestamp(Instant.now());
 
         tc.sendMessage(embedBuilder.build()).queue();
     }
 
     @Override
-    public void onGuildMemberJoin(GuildMemberJoinEvent e){
+    public void onGuildMemberJoin(GuildMemberJoinEvent e) {
         Member mb = e.getMember();
         Guild guild = mb.getGuild();
 
@@ -86,7 +95,7 @@ public class ActionLogEvent extends ListenerAdapter {
     }
 
     @Override
-    public void onGuildMemberLeave(GuildMemberLeaveEvent e){
+    public void onGuildMemberLeave(GuildMemberLeaveEvent e) {
         Member mb = e.getMember();
         Guild guild = mb.getGuild();
 
@@ -101,7 +110,7 @@ public class ActionLogEvent extends ListenerAdapter {
     }
 
     @Override
-    public void onGuildBan(GuildBanEvent e){
+    public void onGuildBan(GuildBanEvent e) {
         User user = e.getUser();
         Guild guild = e.getGuild();
         TextChannel tc = guild.getTextChannelsByName("actionlog", true).get(0);
@@ -115,7 +124,7 @@ public class ActionLogEvent extends ListenerAdapter {
     }
 
     @Override
-    public void onGuildUnban(GuildUnbanEvent e){
+    public void onGuildUnban(GuildUnbanEvent e) {
         User user = e.getUser();
         Guild guild = e.getGuild();
         TextChannel tc = guild.getTextChannelsByName("actionlog", true).get(0);
@@ -127,8 +136,9 @@ public class ActionLogEvent extends ListenerAdapter {
                 .setTimestamp(Instant.now());
         tc.sendMessage(embedBuilder.build()).queue();
     }
+
     @Override
-    public void onGuildMemberRoleAdd(GuildMemberRoleAddEvent e){
+    public void onGuildMemberRoleAdd(GuildMemberRoleAddEvent e) {
         Member mb = e.getMember();
         Guild guild = e.getGuild();
 
@@ -136,15 +146,15 @@ public class ActionLogEvent extends ListenerAdapter {
 
         EmbedBuilder embedBuilder = new EmbedBuilder()
                 .setAuthor(mb.getEffectiveName() + "#" + mb.getUser().getDiscriminator(), null, mb.getUser().getAvatarUrl())
-                .setColor(Color.GREEN)
-                .setDescription("<@" + mb.getUser().getId() + ">" + " **was given the `"+e.getRoles().get(0).getName()+"` role.**")
+                .setColor(Color.CYAN)
+                .setDescription("<@" + mb.getUser().getId() + ">" + " **was given the `" + e.getRoles().get(0).getName() + "` role.**")
                 .setTimestamp(Instant.now());
         tc.sendMessage(embedBuilder.build()).queue();
 
     }
 
     @Override
-    public void onGuildMemberRoleRemove(GuildMemberRoleRemoveEvent e){
+    public void onGuildMemberRoleRemove(GuildMemberRoleRemoveEvent e) {
         Member mb = e.getMember();
         Guild guild = e.getGuild();
 
@@ -152,8 +162,8 @@ public class ActionLogEvent extends ListenerAdapter {
 
         EmbedBuilder embedBuilder = new EmbedBuilder()
                 .setAuthor(mb.getEffectiveName() + "#" + mb.getUser().getDiscriminator(), null, mb.getUser().getAvatarUrl())
-                .setColor(Color.RED)
-                .setDescription("<@" + mb.getUser().getId() + ">" + " **was removed from the `"+e.getRoles().get(0).getName()+"` role.**")
+                .setColor(Color.CYAN)
+                .setDescription("<@" + mb.getUser().getId() + ">" + " **was removed from the `" + e.getRoles().get(0).getName() + "` role.**")
                 .setTimestamp(Instant.now());
         tc.sendMessage(embedBuilder.build()).queue();
 
@@ -162,107 +172,119 @@ public class ActionLogEvent extends ListenerAdapter {
     // ROLE EVENTS
 
     @Override
-    public void onRoleCreate(RoleCreateEvent e){
+    public void onRoleCreate(RoleCreateEvent e) {
         Guild guild = e.getGuild();
 
         TextChannel tc = guild.getTextChannelsByName("actionlog", true).get(0);
 
         EmbedBuilder embedBuilder = new EmbedBuilder()
+                .setAuthor("B1teB0t", null, "https://avatars2.githubusercontent.com/u/52173054?s=200&v=4")
                 .setColor(Color.GREEN)
-                .setDescription("**The `"+e.getRole().getName()+"` role was created.**")
+                .setDescription("**The `" + e.getRole().getName() + "` role was created.**")
                 .setTimestamp(Instant.now());
         tc.sendMessage(embedBuilder.build()).queue();
 
     }
+
     @Override
-    public void onRoleDelete(RoleDeleteEvent e){
+    public void onRoleDelete(RoleDeleteEvent e) {
         Guild guild = e.getGuild();
 
         TextChannel tc = guild.getTextChannelsByName("actionlog", true).get(0);
 
         EmbedBuilder embedBuilder = new EmbedBuilder()
+                .setAuthor("B1teB0t", null, "https://avatars2.githubusercontent.com/u/52173054?s=200&v=4")
                 .setColor(Color.RED)
-                .setDescription("**The `"+e.getRole().getName()+"` role got deleted.**")
+                .setDescription("**The `" + e.getRole().getName() + "` role got deleted.**")
                 .setTimestamp(Instant.now());
         tc.sendMessage(embedBuilder.build()).queue();
 
     }
 
-    // ROLE UPDATE
-
     @Override
-    public void onRoleUpdateColor(RoleUpdateColorEvent e){
+    public void onRoleUpdateColor(RoleUpdateColorEvent e) {
         Guild guild = e.getGuild();
 
         TextChannel tc = guild.getTextChannelsByName("actionlog", true).get(0);
 
         EmbedBuilder embedBuilder = new EmbedBuilder()
-                .setColor(Color.GREEN)
-                .setDescription("**The color of the `"+e.getRole().getName()+"` role got changed.**")
+                .setAuthor("B1teB0t", null, "https://avatars2.githubusercontent.com/u/52173054?s=200&v=4")
+                .setColor(Color.BLUE)
+                .setDescription("**The color of the `" + e.getRole().getName() + "` role got changed.**")
                 .setTimestamp(Instant.now());
         tc.sendMessage(embedBuilder.build()).queue();
     }
+
     @Override
-    public void onRoleUpdateName(RoleUpdateNameEvent e){
+    public void onRoleUpdateName(RoleUpdateNameEvent e) {
         Guild guild = e.getGuild();
 
         TextChannel tc = guild.getTextChannelsByName("actionlog", true).get(0);
 
         EmbedBuilder embedBuilder = new EmbedBuilder()
-                .setColor(Color.GREEN)
-                .setDescription("**The name of the `"+e.getRole().getName()+"` role got changed.**")
-                .setTimestamp(Instant.now());
-        tc.sendMessage(embedBuilder.build()).queue();
-
-    }
-    @Override
-    public void onRoleUpdateHoisted(RoleUpdateHoistedEvent e){
-        Guild guild = e.getGuild();
-
-        TextChannel tc = guild.getTextChannelsByName("actionlog", true).get(0);
-
-        EmbedBuilder embedBuilder = new EmbedBuilder()
-                .setColor(Color.GREEN)
-                .setDescription("**The hoisted state of the `"+e.getRole().getName()+"` role got changed.**")
+                .setAuthor("B1teB0t", null, "https://avatars2.githubusercontent.com/u/52173054?s=200&v=4")
+                .setColor(Color.BLUE)
+                .setDescription("**The name of the `" + e.getRole().getName() + "` role got changed.**")
                 .setTimestamp(Instant.now());
         tc.sendMessage(embedBuilder.build()).queue();
 
     }
+
     @Override
-    public void onRoleUpdatePermissions(RoleUpdatePermissionsEvent e){
+    public void onRoleUpdateHoisted(RoleUpdateHoistedEvent e) {
         Guild guild = e.getGuild();
 
         TextChannel tc = guild.getTextChannelsByName("actionlog", true).get(0);
 
         EmbedBuilder embedBuilder = new EmbedBuilder()
-                .setColor(Color.GREEN)
-                .setDescription("**The permissions of the `"+e.getRole().getName()+"` role got changed.**")
+                .setAuthor("B1teB0t", null, "https://avatars2.githubusercontent.com/u/52173054?s=200&v=4")
+                .setColor(Color.BLUE)
+                .setDescription("**The hoisted state of the `" + e.getRole().getName() + "` role got changed.**")
                 .setTimestamp(Instant.now());
         tc.sendMessage(embedBuilder.build()).queue();
 
     }
+
     @Override
-    public void onRoleUpdateMentionable(RoleUpdateMentionableEvent e){
+    public void onRoleUpdatePermissions(RoleUpdatePermissionsEvent e) {
         Guild guild = e.getGuild();
 
         TextChannel tc = guild.getTextChannelsByName("actionlog", true).get(0);
 
         EmbedBuilder embedBuilder = new EmbedBuilder()
-                .setColor(Color.GREEN)
-                .setDescription("**The mentionable setting of the `"+e.getRole().getName()+"` role got changed.**")
+                .setAuthor("B1teB0t", null, "https://avatars2.githubusercontent.com/u/52173054?s=200&v=4")
+                .setColor(Color.BLUE)
+                .setDescription("**The permissions of the `" + e.getRole().getName() + "` role got changed.**")
                 .setTimestamp(Instant.now());
         tc.sendMessage(embedBuilder.build()).queue();
 
     }
+
     @Override
-    public void onRoleUpdatePosition(RoleUpdatePositionEvent e){
+    public void onRoleUpdateMentionable(RoleUpdateMentionableEvent e) {
         Guild guild = e.getGuild();
 
         TextChannel tc = guild.getTextChannelsByName("actionlog", true).get(0);
 
         EmbedBuilder embedBuilder = new EmbedBuilder()
-                .setColor(Color.GREEN)
-                .setDescription("**The position of the `"+e.getRole().getName()+"` role got changed.**")
+                .setAuthor("B1teB0t", null, "https://avatars2.githubusercontent.com/u/52173054?s=200&v=4")
+                .setColor(Color.BLUE)
+                .setDescription("**The mentionable setting of the `" + e.getRole().getName() + "` role got changed.**")
+                .setTimestamp(Instant.now());
+        tc.sendMessage(embedBuilder.build()).queue();
+
+    }
+
+    @Override
+    public void onRoleUpdatePosition(RoleUpdatePositionEvent e) {
+        Guild guild = e.getGuild();
+
+        TextChannel tc = guild.getTextChannelsByName("actionlog", true).get(0);
+
+        EmbedBuilder embedBuilder = new EmbedBuilder()
+                .setAuthor("B1teB0t", null, "https://avatars2.githubusercontent.com/u/52173054?s=200&v=4")
+                .setColor(Color.BLUE)
+                .setDescription("**The position of the `" + e.getRole().getName() + "` role got changed.**")
                 .setTimestamp(Instant.now());
         tc.sendMessage(embedBuilder.build()).queue();
 
@@ -270,7 +292,7 @@ public class ActionLogEvent extends ListenerAdapter {
 
     // MESSAGE CHANGES
     @Override
-    public void onGuildMessageUpdate(GuildMessageUpdateEvent e){
+    public void onGuildMessageUpdate(GuildMessageUpdateEvent e) {
         User author = e.getAuthor();
         Guild guild = e.getGuild();
 
@@ -278,48 +300,53 @@ public class ActionLogEvent extends ListenerAdapter {
 
         EmbedBuilder embedBuilder = new EmbedBuilder()
                 .setAuthor(author.getName() + "#" + author.getDiscriminator(), null, author.getAvatarUrl())
-                .setColor(Color.RED)
-                .setDescription("<@" + author.getId() + ">" + " **edited his message to `"+e.getMessage().getContentDisplay()+"`.**")
+                .setColor(Color.ORANGE)
+                .setDescription("<@" + author.getId() + ">" + " **edited his message to `" + e.getMessage().getContentDisplay() + "`.**")
                 .setTimestamp(Instant.now());
         tc.sendMessage(embedBuilder.build()).queue();
     }
+
     @Override
-    public void onGuildMessageDelete(GuildMessageDeleteEvent e){
+    public void onGuildMessageDelete(GuildMessageDeleteEvent e) {
         Guild guild = e.getGuild();
         TextChannel tc = guild.getTextChannelsByName("actionlog", true).get(0);
 
         EmbedBuilder embedBuilder = new EmbedBuilder()
                 .setColor(Color.RED)
-                .setDescription("**A message in channel <#"+e.getChannel().getId()+"> got deleted.**")
+                .setAuthor("B1teB0t", null, "https://avatars2.githubusercontent.com/u/52173054?s=200&v=4")
+                .setDescription("**A message in channel <#" + e.getChannel().getId() + "> got deleted.**")
                 .setTimestamp(Instant.now());
         tc.sendMessage(embedBuilder.build()).queue();
     }
 
     // CHANNEL CREATION
     @Override
-    public void onTextChannelCreate(TextChannelCreateEvent e){
+    public void onTextChannelCreate(TextChannelCreateEvent e) {
         Channel ch = e.getChannel();
         Guild guild = e.getGuild();
 
         TextChannel tc = guild.getTextChannelsByName("actionlog", true).get(0);
 
         EmbedBuilder embedBuilder = new EmbedBuilder()
-                .setColor(Color.RED)
-                .setDescription("**TextChannel <#"+ch.getId()+"> was created.**")
+                .setAuthor("B1teB0t", null, "https://avatars2.githubusercontent.com/u/52173054?s=200&v=4")
+                .setColor(Color.BLUE)
+                .setDescription("**TextChannel <#" + ch.getId() + "> was created.**")
                 .setTimestamp(Instant.now());
         tc.sendMessage(embedBuilder.build()).queue();
 
     }
+
     @Override
-    public void onVoiceChannelCreate(VoiceChannelCreateEvent e){
+    public void onVoiceChannelCreate(VoiceChannelCreateEvent e) {
         Channel ch = e.getChannel();
         Guild guild = e.getGuild();
 
         TextChannel tc = guild.getTextChannelsByName("actionlog", true).get(0);
 
         EmbedBuilder embedBuilder = new EmbedBuilder()
-                .setColor(Color.RED)
-                .setDescription("**VoiceChannel `"+ch.getName()+"` was created.**")
+                .setAuthor("B1teB0t", null, "https://avatars2.githubusercontent.com/u/52173054?s=200&v=4")
+                .setColor(Color.BLUE)
+                .setDescription("**VoiceChannel `" + ch.getName() + "` was created.**")
                 .setTimestamp(Instant.now());
         tc.sendMessage(embedBuilder.build()).queue();
     }
@@ -332,35 +359,35 @@ public class ActionLogEvent extends ListenerAdapter {
         String newNick = e.getNewNick();
 
 
-        if(e.getNewNick() == null){
+        if (e.getNewNick() == null) {
 
             TextChannel tc = guild.getTextChannelsByName("actionlog", true).get(0);
             EmbedBuilder embedBuilder = new EmbedBuilder()
                     .setAuthor(mb.getEffectiveName() + "#" + mb.getUser().getDiscriminator(), null, mb.getUser().getAvatarUrl())
-                    .setColor(Color.RED)
+                    .setColor(Color.ORANGE)
                     .setDescription("<@" + mb.getUser().getId() + ">" + " **changed his nickname **")
-                    .addField("**Previous nickname**", "`"+oldNick+"`", true)
-                    .addField("**New nickname**", "`"+mb.getUser().getName()+"`", true)
+                    .addField("**Previous nickname**", "`" + oldNick + "`", true)
+                    .addField("**New nickname**", "`" + mb.getUser().getName() + "`", true)
                     .setTimestamp(Instant.now());
             tc.sendMessage(embedBuilder.build()).queue();
-        }else if(e.getPrevNick() == null){
+        } else if (e.getPrevNick() == null) {
             TextChannel tc = guild.getTextChannelsByName("actionlog", true).get(0);
             EmbedBuilder embedBuilder = new EmbedBuilder()
                     .setAuthor(mb.getEffectiveName() + "#" + mb.getUser().getDiscriminator(), null, mb.getUser().getAvatarUrl())
-                    .setColor(Color.RED)
+                    .setColor(Color.ORANGE)
                     .setDescription("<@" + mb.getUser().getId() + ">" + " **changed his nickname **")
-                    .addField("**Previous nickname**", "`"+mb.getUser().getName()+"`", true)
-                    .addField("**New nickname**", "`"+newNick+"`", true)
+                    .addField("**Previous nickname**", "`" + mb.getUser().getName() + "`", true)
+                    .addField("**New nickname**", "`" + newNick + "`", true)
                     .setTimestamp(Instant.now());
             tc.sendMessage(embedBuilder.build()).queue();
-        }else{
+        } else {
             TextChannel tc = guild.getTextChannelsByName("actionlog", true).get(0);
             EmbedBuilder embedBuilder = new EmbedBuilder()
                     .setAuthor(mb.getEffectiveName() + "#" + mb.getUser().getDiscriminator(), null, mb.getUser().getAvatarUrl())
-                    .setColor(Color.RED)
+                    .setColor(Color.ORANGE)
                     .setDescription("<@" + mb.getUser().getId() + ">" + " **changed his nickname **")
-                    .addField("**Previous nickname**", "`"+oldNick+"`", true)
-                    .addField("**New nickname**", "`"+newNick+"`", true)
+                    .addField("**Previous nickname**", "`" + oldNick + "`", true)
+                    .addField("**New nickname**", "`" + newNick + "`", true)
                     .setTimestamp(Instant.now());
             tc.sendMessage(embedBuilder.build()).queue();
         }

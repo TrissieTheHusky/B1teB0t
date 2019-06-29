@@ -17,6 +17,12 @@ import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * Handles the different Commands
+ *
+ * @author Kaufisch
+ */
+
 public class CommandManager extends ListenerAdapter {
 
     public void onGuildMessageReceived(GuildMessageReceivedEvent e) {

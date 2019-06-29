@@ -15,6 +15,13 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * WarnSystem
+ *
+ * @author Kaufisch
+ */
+
+
 public class WarnSystem {
 
     public void warnCommand(ArrayList<String> args, Guild guild, List<Member> members, User mod, TextChannel textChannel, Message cmd) {
