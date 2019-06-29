@@ -3,6 +3,8 @@ package b1tec0de.b1teb0t.events;
 import b1tec0de.b1teb0t.main.Main;
 import b1tec0de.b1teb0t.utils.Database;
 import b1tec0de.b1teb0t.utils.objects.GuildConfig;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
@@ -43,5 +45,20 @@ public class GuildJoin extends ListenerAdapter {
                         });
             }
         }, 5000);
+
+        if (!isAction(e.getGuild())) {
+            e.getGuild().getController().createTextChannel("actionlog").queue();
+        }
+
     }
+
+    private boolean isAction(Guild guild) {
+        for (TextChannel tc : guild.getTextChannels()) {
+            if (tc.getName().equals("actionlog")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

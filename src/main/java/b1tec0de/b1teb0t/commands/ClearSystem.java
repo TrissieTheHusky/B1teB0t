@@ -1,3 +1,4 @@
+
 package b1tec0de.b1teb0t.commands;
 
 import net.dv8tion.jda.core.entities.Message;
@@ -59,5 +60,3 @@ public class ClearSystem {
         channel.deleteMessages(msgs).queue();
     }
 }
-
-

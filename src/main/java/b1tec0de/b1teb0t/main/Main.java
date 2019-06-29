@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class Main {
 
     public static ArrayList<GuildConfig> guildConfigs = new ArrayList<>();
-  
+
     private static JDA jda;
     private static Logger logger = LoggerFactory.getLogger(ConfigManager.class);
 
@@ -30,15 +30,13 @@ public class Main {
         cm.getAuthToken();
         try {
             String token = cm.getAuthToken();
-            if(token.equals("not found")) {
+            if (token.equals("not found")) {
                 logger.error("config.json not found!\n");
                 System.exit(0);
-            }
-            else if(token.equals("default values")) {
+            } else if (token.equals("default values")) {
                 logger.error("Please make sure that you fill config.json with values!");
                 System.exit(0);
-            }
-            else {
+            } else {
                 jda = new JDABuilder(AccountType.BOT)
                         .setToken(cm.getAuthToken())
                         .setAutoReconnect(true)
