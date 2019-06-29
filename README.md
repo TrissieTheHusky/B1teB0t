@@ -6,24 +6,24 @@ Discord Moderation Bot made with ❤️ by B1teC0de Team
 ## Discord Hack Week Submission 2019
 Category: Moderation
 
-#Setup
-You need a MySQL/MariaDB database to run this bot.
+## Setup
+1. You need a MySQL/MariaDB database to run this bot.
 Import `b1teb0t.sql` into a database:
  - Via Commandline:
     - `mysql -u username -p database_name < b1teb0t.sql`
- - Via PhpMyAdmin -> Select Import -> Browse file `b1teb0t.sql` -> Go
+ - Via PhpMyAdmin -> Import -> Browse file `b1teb0t.sql` -> Go
 
-You can Compile the Bot yourself by using gradle or download it from [Releases](https://github.com/b1tec0de/B1teB0t/releases).
+2. You can Compile the Bot yourself by using gradle or download it from [Releases](https://github.com/b1tec0de/B1teB0t/releases).
 
-The Bot uses a `config.json`. 
+3. The Bot uses a `config.json`. 
 Create the `config.json` file with the layout of [`config.json.example`](https://github.com/b1tec0de/B1teB0t/blob/master/config.json.example) 
-and fill it up with your Token and Database Credentials.
+and fill it up with your Discord bot token and Database Credentials.
 
-After that you can start the Bot with `java -jar B1teB0t-1.0.jar`
+4. After that you can start the bot with `java -jar B1teB0t-1.0.jar`
 
-Then invite the bot to your Guild- !! Important !! The bot needs Administrator rights.
+5. Then invite the bot to your Guild | **The bot needs Administrator rights.**
 
-Now you can use `!help`. There is explained how you setup the bot.
+6. Now you can use `!help`. There is explained how you setup the bot.
 
 ## Features
  - SupportSystem - you get notified when someone of your guild needs help.
