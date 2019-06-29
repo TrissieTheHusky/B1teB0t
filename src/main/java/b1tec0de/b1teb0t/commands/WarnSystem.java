@@ -9,6 +9,7 @@ import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.exceptions.InsufficientPermissionException;
 
 import java.awt.*;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -17,12 +18,13 @@ import java.util.TimerTask;
 public class WarnSystem {
 
     public void warnCommand(ArrayList<String> args, Guild guild, List<Member> members, User mod, TextChannel textChannel, Message cmd) {
-        // Initialize GuildConfig
-        GuildConfigManager gcm = new GuildConfigManager();
-        GuildConfig guildConfig = gcm.getGuildConfigById(guild.getId());
 
-        // Right size?
         if (members.size() == 1 && args.size() == 2) {
+            // Initialize GuildConfig
+            GuildConfigManager gcm = new GuildConfigManager();
+            GuildConfig guildConfig = gcm.getGuildConfigById(guild.getId());
+
+            // Right size?
             Member member = members.get(0);
             // Setup WarnSystem?
             if (guildConfig.isWarnSystem()) {
@@ -35,14 +37,24 @@ public class WarnSystem {
                 if (amountOfWarns < maxWarns) {
                     //Timeout
                     int timeout = guildConfig.getWarnSystemTimeoutLength(); // In minutes
+                    EmbedBuilder privatEmbedBuilder = new EmbedBuilder()
+                            .setColor(Color.ORANGE)
+                            .setAuthor(guild.getName(), null, guild.getIconUrl())
+                            .setDescription("You have been timeouted for " + guildConfig.getWarnSystemTimeoutLength() + " minute(s).")
+                            .addField("Reason", reason, false)
+                            .setTimestamp(Instant.now());
+                    members.get(0).getUser().openPrivateChannel().queue((channel) -> channel.sendMessage(privatEmbedBuilder.build()).queue());
                     EmbedBuilder embedBuilder = new EmbedBuilder()
                             .setColor(Color.ORANGE)
-                            .setTitle(guild.getName())
-                            .setDescription("You was timeouted for " + guildConfig.getWarnSystemTimeoutLength() + " minutes.")
-                            .addField("Reason", reason, true)
-                            .setFooter("~ B1teB0t made with ❤️ by B1teC0de Team", null);
-
-                    members.get(0).getUser().openPrivateChannel().queue((channel) -> channel.sendMessage(embedBuilder.build()).queue());
+                            .setAuthor(guild.getName(), null, guild.getIconUrl())
+                            .setDescription(members.get(0).getEffectiveName() + "#" + members.get(0).getUser().getDiscriminator() + " was timeouted for " + guildConfig.getWarnSystemTimeoutLength() + " minute(s).")
+                            .addField("Reason", reason, false)
+                            .addField("Moderator", mod.getName(), false)
+                            .setTimestamp(Instant.now());
+                    try {
+                        guild.getTextChannelById(guildConfig.getWarnSystemLog()).sendMessage(embedBuilder.build()).queue();
+                    } catch (Exception ignored) {
+                    }
                     new Timer().schedule(new TimerTask() {
                         @Override
                         public void run() {
@@ -63,16 +75,23 @@ public class WarnSystem {
                         }, 3000));
                     } else {
                         //Perm ban
-                        EmbedBuilder embedBuilder = new EmbedBuilder()
+                        EmbedBuilder privateEmbedBuilder = new EmbedBuilder()
                                 .setColor(Color.RED)
-                                .setTitle(guild.getName())
-                                .setDescription("You was baned from " + guild.getName())
-                                .addField("Reason", reason, true)
-                                .setFooter("~ B1teB0t made with ❤️ by B1teC0de Team", null);
-
-                        members.get(0).getUser().openPrivateChannel().queue((channel) -> channel.sendMessage(embedBuilder.build()).queue(msg -> {
+                                .setAuthor(guild.getName(), null, guild.getIconUrl())
+                                .setDescription("You have been banned from " + guild.getName())
+                                .addField("Reason", reason, false)
+                                .setTimestamp(Instant.now());
+                        members.get(0).getUser().openPrivateChannel().queue((channel) -> channel.sendMessage(privateEmbedBuilder.build()).queue(msg -> {
                             guild.getController().ban(member, 1, "Reason: " + reason + "; Author: " + mod.getName()).queue();
                         }));
+                        EmbedBuilder embedBuilder = new EmbedBuilder()
+                                .setColor(Color.RED)
+                                .setAuthor(guild.getName(), null, guild.getIconUrl())
+                                .setDescription(members.get(0).getEffectiveName() + "#" + members.get(0).getUser().getDiscriminator() + " was banned.")
+                                .addField("Reason", reason, false)
+                                .addField("Moderator", mod.getName(), false)
+                                .setTimestamp(Instant.now());
+                        guild.getTextChannelById(guildConfig.getWarnSystemLog()).sendMessage(embedBuilder.build()).queue();
                         new Timer().schedule(new TimerTask() {
                             @Override
                             public void run() {
@@ -92,6 +111,9 @@ public class WarnSystem {
                 }, 3000));
             }
         } else {
+            // Initialize GuildConfig
+            GuildConfigManager gcm = new GuildConfigManager();
+            GuildConfig guildConfig = gcm.getGuildConfigById(guild.getId());
             textChannel.sendMessage("Usage: `" + guildConfig.getPrefix() + "warn <@User> <Reason Id>`").queue(message -> new Timer().schedule(new TimerTask() {
                 @Override
                 public void run() {
@@ -111,6 +133,13 @@ public class WarnSystem {
             }
         }
 
+        for (VoiceChannel vc : guild.getVoiceChannels()) {
+            try {
+                vc.createPermissionOverride(member).setDeny(Permission.VOICE_CONNECT).queue();
+            } catch (InsufficientPermissionException ignored) {
+            }
+        }
+
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
@@ -118,6 +147,16 @@ public class WarnSystem {
                 for (TextChannel tc : guild.getTextChannels()) {
                     try {
                         for (PermissionOverride permissionOverride : tc.getMemberPermissionOverrides()) {
+                            if (permissionOverride.isMemberOverride() && permissionOverride.getMember().equals(member)) {
+                                permissionOverride.delete().queue();
+                            }
+                        }
+                    } catch (Exception ignored) {
+                    }
+                }
+                for (VoiceChannel vc : guild.getVoiceChannels()) {
+                    try {
+                        for (PermissionOverride permissionOverride : vc.getMemberPermissionOverrides()) {
                             if (permissionOverride.isMemberOverride() && permissionOverride.getMember().equals(member)) {
                                 permissionOverride.delete().queue();
                             }

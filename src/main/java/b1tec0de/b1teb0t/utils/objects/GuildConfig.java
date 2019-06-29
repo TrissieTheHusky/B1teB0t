@@ -13,6 +13,7 @@ public class GuildConfig {
     private String guildId;
     private String prefix;
     private boolean warnSystem;
+    private String warnSystemLog;
     private int warnSystemMaxWarns;
     private int warnSystemTimeoutLength;
     private ArrayList<String> supportChannel;
@@ -34,14 +35,6 @@ public class GuildConfig {
 
     public void setPrefix(String prefix) {
         this.prefix = prefix;
-    }
-
-    public boolean isWarnSystem() {
-        return warnSystem;
-    }
-
-    public void setWarnSystem(boolean warn_system) {
-        this.warnSystem = warn_system;
     }
 
     public int getWarnSystemMaxWarns() {
@@ -90,5 +83,21 @@ public class GuildConfig {
 
     public void setSupportRole(String supportRole) {
         this.supportRole = supportRole;
+    }
+
+    public String getWarnSystemLog() {
+        return warnSystemLog;
+    }
+
+    public void setWarnSystemLog(String warnSystemLog) {
+        this.warnSystemLog = warnSystemLog;
+    }
+
+    public boolean isWarnSystem() {
+        return warnSystem;
+    }
+
+    public void setWarnSystem(boolean warnSystem) {
+        this.warnSystem = warnSystem;
     }
 }

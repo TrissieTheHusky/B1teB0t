@@ -3,7 +3,6 @@ package b1tec0de.b1teb0t.utils;
 import b1tec0de.b1teb0t.main.Main;
 import b1tec0de.b1teb0t.utils.objects.GuildConfig;
 import com.mysql.cj.jdbc.MysqlDataSource;
-import net.dv8tion.jda.core.entities.TextChannel;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -52,11 +51,12 @@ public class Database {
                 } else {
                     guildConfig.setWarnSystem(false);
                 }
-                guildConfig.setWarnSystemMaxWarns(rs.getInt(4));
-                guildConfig.setWarnSystemTimeoutLength(rs.getInt(5));
-                guildConfig.setSupportRole(rs.getString(6));
-                guildConfig.setSupportChannelWaitingRoom(rs.getString(7));
-                guildConfig.setSupportNews(rs.getString(8));
+                guildConfig.setWarnSystemLog(rs.getString(4));
+                guildConfig.setWarnSystemMaxWarns(rs.getInt(5));
+                guildConfig.setWarnSystemTimeoutLength(rs.getInt(6));
+                guildConfig.setSupportRole(rs.getString(7));
+                guildConfig.setSupportChannelWaitingRoom(rs.getString(8));
+                guildConfig.setSupportNews(rs.getString(9));
                 Main.guildConfigs.add(guildConfig);
             }
             rs.close();
@@ -246,7 +246,7 @@ public class Database {
             // Connect to Database
             Connection conn = mysqlDataSource.getConnection();
             // Set Query
-            PreparedStatement stmt = conn.prepareStatement("UPDATE guild_config SET warn_system_maxwarns=? WHERE guildId=?;");
+            PreparedStatement stmt = conn.prepareStatement("UPDATE guild_config SET warn_system_timeout_length=? WHERE guildId=?;");
             stmt.setString(1, amount);
             stmt.setString(2, guildId);
             // Execute Query and Close Connection
@@ -258,7 +258,24 @@ public class Database {
         }
     }
 
-    public boolean addWarnReason(TextChannel channel, String guildId, int reasonId, String reason) {
+    public void setWarnLog(String guildId, String channel) {
+        try {
+            // Connect to Database
+            Connection conn = mysqlDataSource.getConnection();
+            // Set Query
+            PreparedStatement stmt = conn.prepareStatement("UPDATE guild_config SET warn_system_log=? WHERE guildId=?;");
+            stmt.setString(1, channel);
+            stmt.setString(2, guildId);
+            // Execute Query and Close Connection
+            stmt.executeUpdate();
+            stmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean addWarnReason(String guildId, int reasonId, String reason) {
         try {
             // Connect to Database
             Connection conn = mysqlDataSource.getConnection();
@@ -316,6 +333,38 @@ public class Database {
             stmt.setString(2, channel);
             // Execute Query and Close Connection
             stmt.executeUpdate();
+            stmt.close();
+            conn.close();
+        } catch (SQLException ignored) {
+        }
+    }
+
+    public String getReasons(String guildId) {
+        try {
+            Connection conn = mysqlDataSource.getConnection();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT id,reason FROM warn_system_reasons WHERE guildId='" + guildId + "';");
+            StringBuilder reason = new StringBuilder();
+            while (rs.next()) {
+                reason.append(rs.getString(1)).append(": ").append(rs.getString(2)).append("\n");
+            }
+            rs.close();
+            stmt.close();
+            conn.close();
+            return reason.substring(0, reason.length() - 1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public void clearReasons(String guildId) {
+        try {
+            // Connect to Database
+            Connection conn = mysqlDataSource.getConnection();
+            Statement stmt = conn.createStatement();
+            // Execute Query and Close Connection
+            stmt.executeUpdate("DELETE FROM warn_system_reasons WHERE guildId='" + guildId + "';");
             stmt.close();
             conn.close();
         } catch (SQLException ignored) {
