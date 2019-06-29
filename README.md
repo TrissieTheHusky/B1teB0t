@@ -7,13 +7,12 @@ Discord Moderation Bot made with ❤️ by B1teC0de Team
 Category: Moderation
 
 ## Setup
-1. You need a MySQL/MariaDB database to run this bot.
+1. Download the jar and sql file from [Releases](https://github.com/b1tec0de/B1teB0t/releases).
+2. You need a MySQL/MariaDB database to run this bot.
 Import `b1teb0t.sql` into a database:
  - Via Commandline:
     - `mysql -u username -p database_name < b1teb0t.sql`
  - Via PhpMyAdmin -> Import -> Browse file `b1teb0t.sql` -> Go
-
-2. You can Compile the Bot yourself by using gradle or download it from [Releases](https://github.com/b1tec0de/B1teB0t/releases).
 
 3. The Bot uses a `config.json`. 
 Create the `config.json` file with the layout of [`config.json.example`](https://github.com/b1tec0de/B1teB0t/blob/master/config.json.example) 
